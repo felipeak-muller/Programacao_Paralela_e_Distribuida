@@ -1,0 +1,5 @@
+CompileFlags:
+  Compiler: /usr/bin/g++
+  Add:
+    - -std=c++17
+    - -I/usr/include/opencv4
