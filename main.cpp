@@ -4,6 +4,22 @@
 #include <string>
 #include <filesystem>
 #include <vector>
+#include <omp.h>
+
+#include MAX_THREADS 8
+
+int apply_gaussian([][]int mat) {
+
+}
+
+int apply_sobel([][]int mat) {
+    
+}
+
+int apply_sharpen([][] int mat) {
+
+}
+
 
 int main(int argc, char** argv) {
     int myid, numprocs;
@@ -105,13 +121,17 @@ int main(int argc, char** argv) {
             MPI_Recv(buffer.data(), total_bytes, MPI_BYTE, 0, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 
             cv::Mat frame(linhas, colunas, tipo, buffer.data());
+            
+            // Quantas linhas cada thread ficará responsável
+            int linhas_locais = linhas / MAX_THREADS;
 
-            // Processamento do frame: converte para escala de cinza e salva
-            cv::Mat gray;
-            cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+            // Aqui vamos spawnar  8 threads
+            #pragma omp parallel max_threads(8)
+            {
+                // Puxa indice da linha
 
-            std::string filename = output_dir + "/frame_" + std::to_string(frame_idx) + ".jpg";
-            cv::imwrite(filename, gray);
+                // Percorre a matriz aplicando o filtro escolhido
+            }
 
             std::cout << "Worker " << myid << " salvou " << filename << "\n";
         }
