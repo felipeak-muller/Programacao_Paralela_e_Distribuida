@@ -1,4 +1,4 @@
-CXX      = g++
+CXX      = mpicxx
 CXXFLAGS = -std=c++17 $(shell pkg-config --cflags opencv4)
 LDFLAGS  = $(shell pkg-config --libs opencv4)
 
@@ -13,7 +13,8 @@ $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
 
 run: all
-	./$(TARGET)
+	mpirun -np 4 ./$(TARGET)
 
 clean:
 	rm -f $(TARGET)
+	rm -rf frames/
