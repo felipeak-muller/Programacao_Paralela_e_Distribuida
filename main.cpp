@@ -11,9 +11,9 @@
 
 #define MAX_THREADS 8
 
-// ---------------------------------------------------------
+
 // 1. GAUSSIANO (Redução de ruído / Desfoque)
-// ---------------------------------------------------------
+
 void apply_gaussian(const cv::Mat& src, cv::Mat& dst, int start_row, int end_row) {
     int kernel[3][3] = {{1, 2, 1}, {2, 4, 2}, {1, 2, 1}};
     int kernel_weight = 16; 
@@ -35,9 +35,9 @@ void apply_gaussian(const cv::Mat& src, cv::Mat& dst, int start_row, int end_row
     }
 }
 
-// ---------------------------------------------------------
+
 // 2. SHARPEN (Nitidez)
-// ---------------------------------------------------------
+
 void apply_sharpen(const cv::Mat& src, cv::Mat& dst, int start_row, int end_row) {
     int kernel[3][3] = {{ 0, -1,  0}, {-1,  5, -1}, { 0, -1,  0}};
     int start = std::max(1, start_row);
@@ -58,9 +58,9 @@ void apply_sharpen(const cv::Mat& src, cv::Mat& dst, int start_row, int end_row)
     }
 }
 
-// ---------------------------------------------------------
+
 // 3. SOBEL (Detecção de Bordas)
-// ---------------------------------------------------------
+
 void apply_sobel(const cv::Mat& src, cv::Mat& dst, int start_row, int end_row) {
     int Kx[3][3] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
     int Ky[3][3] = {{-1, -2, -1}, { 0, 0, 0}, { 1, 2, 1}};
@@ -109,17 +109,17 @@ int main(int argc, char** argv) {
             std::cout << "1. Aplicar Filtro Gaussiano\n";
             std::cout << "2. Aplicar Filtro Sharpen\n";
             std::cout << "3. Aplicar Filtro Sobel\n";
-            std::cout << "4. Excluir vídeo (resultado.avi)\n";
+            std::cout << "4. Excluir vídeo (resultado.mp4)\n";
             std::cout << "0. Sair do programa\n";
             std::cout << "Escolha uma opção: ";
             std::cin >> opcao;
 
             // Opção 4: Excluir o arquivo
             if (opcao == 4) {
-                if (std::filesystem::remove("resultado.avi")) {
-                    std::cout << "[SUCESSO] Arquivo 'resultado.avi' foi excluido.\n";
+                if (std::filesystem::remove("resultado.mp4")) {
+                    std::cout << "[SUCESSO] Arquivo 'resultado.mp4' foi excluido.\n";
                 } else {
-                    std::cout << "[AVISO] Arquivo 'resultado.avi' nao encontrado.\n";
+                    std::cout << "[AVISO] Arquivo 'resultado.mp4' nao encontrado.\n";
                 }
             } else if (opcao < 0 || opcao > 4) {
                 std::cout << "[ERRO] Opcao invalida.\n";
@@ -136,9 +136,9 @@ int main(int argc, char** argv) {
         if (opcao == 4 || opcao < 0 || opcao > 4) continue;
 
 
-        // ==========================================
-        //  INÍCIO DO PROCESSAMENTO DE VÍDEO (1, 2, 3)
-        // ==========================================
+        // =================================
+        //  INÍCIO DO PROCESSAMENTO DE VÍDEO
+        // =================================
         if (myid == 0) {
             // PROCESSO MASTER
             const std::string video_path = "sample.mp4";
@@ -153,7 +153,7 @@ int main(int argc, char** argv) {
             int height = cap.get(cv::CAP_PROP_FRAME_HEIGHT);
             int fps = cap.get(cv::CAP_PROP_FPS);
             
-            cv::VideoWriter writer("resultado.avi", cv::VideoWriter::fourcc('M', 'J', 'P', 'G'), fps, cv::Size(width, height));
+            cv::VideoWriter writer("resultado.mp4", cv::VideoWriter::fourcc('m', 'p', '4', 'v'), fps, cv::Size(width, height));
             
             std::cout << "\nIniciando processamento...\n";
 
@@ -208,7 +208,7 @@ int main(int argc, char** argv) {
 
             cap.release();
             writer.release();
-            std::cout << "\nConcluido! Video salvo com sucesso ('resultado.avi').\n";
+            std::cout << "\nConcluido! Video salvo com sucesso ('resultado.mp4').\n";
 
         } else {
             // PROCESSO WORKER
