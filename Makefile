@@ -1,6 +1,6 @@
 CXX      = mpicxx
-CXXFLAGS = -std=c++17 $(shell pkg-config --cflags opencv4)
-LDFLAGS  = $(shell pkg-config --libs opencv4)
+CXXFLAGS = -std=c++17 -fopenmp $(shell pkg-config --cflags opencv4)
+LDFLAGS  = -fopenmp $(shell pkg-config --libs opencv4)
 
 TARGET = main
 SRC    = main.cpp
