@@ -224,6 +224,7 @@ int main(int argc, char** argv) {
                         int end_meta[5] = {-1, 0, 0, 0, 0}; // rows=-1 e o codigo de encerramento no worker
                         MPI_Send(end_meta, 5, MPI_INT, id_livre, TAG_FRAME_META, MPI_COMM_WORLD);
                         workers_alive--; // um worker a menos aguardando trabalho
+                        printf("Enviando sinal de finalização para worker %d.\n", id_livre);
                     }
                 }
                 else if (status.MPI_TAG == TAG_RESULT_META) {
@@ -263,6 +264,7 @@ int main(int argc, char** argv) {
 
         } else {
             // PROCESSO WORKER
+            int count = 0; // Só para mostrar passos
             while (true) {
                 // Avisa o Master que está livre (TAG_WORKER_READY)
                 MPI_Send(&myid, 1, MPI_INT, 0, TAG_WORKER_READY, MPI_COMM_WORLD);
@@ -273,6 +275,12 @@ int main(int argc, char** argv) {
 
                 int linhas = metadados[0];
                 if (linhas == -1) break; // O vídeo acabou! Quebra esse loop e volta pro Menu principal
+
+                count++;
+                if (count % 20 == 0) {
+                    printf("Master já enviou %d frames para worker %d\n", count, myid);
+                }
+                fflush(stdout);
 
                 // Recebe os metadados do frame (TAG_FRAME_META)
                 int colunas = metadados[1];
