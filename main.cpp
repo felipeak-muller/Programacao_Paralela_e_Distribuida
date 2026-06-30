@@ -225,6 +225,7 @@ int main(int argc, char** argv) {
                         MPI_Send(end_meta, 5, MPI_INT, id_livre, TAG_FRAME_META, MPI_COMM_WORLD);
                         workers_alive--; // um worker a menos aguardando trabalho
                         printf("Enviando sinal de finalização para worker %d.\n", id_livre);
+                        fflush(stdout);
                     }
                 }
                 else if (status.MPI_TAG == TAG_RESULT_META) {
